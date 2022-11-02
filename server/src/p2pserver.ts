@@ -37,9 +37,9 @@ const requestBlockchain = () => ({
 
 const initP2PServer = (port: number) => {
 	const server = new WebSocket.Server({ port });
-	console.log(chalk.yellow(`:::server::: - listening p2p on port : ${port}`));
+	console.log(chalk.blue(`:::server::: - listening p2p on port : ${port}`));
 	server.on("connection", (ws) => {
-		console.log(chalk.yellow(":::server::: - new peer conected"));
+		console.log(chalk.blue(":::server::: - new peer conected"));
 		handleConnection(ws);
 	});
 };
@@ -99,7 +99,7 @@ const initMessageHandler = (ws: WebSocket) => {
 				}
 
 				console.log(
-					chalk.yellowBright(
+					chalk.yellow(
 						"\n:::server::: - recieved blockchain: ",
 						JSON.stringify(recievedChain),
 						"\n"
@@ -120,7 +120,7 @@ const handleReplaceBlockchain = (newChain: Block[]) => {
 		return;
 	}
 
-	if (isBlockTypeValid) {
+	if (!isBlockTypeValid) {
 		console.log(
 			chalk.red(":::server::: - !ERROR: invalid blockchain structure")
 		);
@@ -144,7 +144,7 @@ const handleReplaceBlockchain = (newChain: Block[]) => {
 			addBlockToChain(latestBlockRecieved);
 			broadcast(requestLatestBlock());
 			console.log(
-				chalk.greenBright(":::server::: - blockchain replaced.")
+				chalk.greenBright(":::server::: - blockchain replaced. ")
 			);
 		} else if (newChain.length === 1) {
 			console.log(
@@ -161,21 +161,19 @@ const handleReplaceBlockchain = (newChain: Block[]) => {
 			);
 			replaceChain(newChain);
 			console.log(
-				chalk.bgGreenBright(":::server::: - blockchain replaced.")
+				chalk.greenBright(":::server::: - blockchain replaced.")
 			);
 		}
 	} else {
 		console.log(
-			chalk.blueBright(
-				":::server::: - no new block, replacement aborted."
-			)
+			chalk.black(":::server::: - no new block, replacement aborted.")
 		);
 	}
 };
 
 const initErrorHandler = (ws: WebSocket) => {
 	const closeConnection = (myWs: WebSocket) => {
-		console.log("connection failed to peer: " + myWs.url);
+		console.log(chalk.red("connection failed to peer: " + myWs.url));
 		peers.splice(peers.indexOf(myWs), 1);
 	};
 	ws.on("close", () => closeConnection(ws));
@@ -183,13 +181,12 @@ const initErrorHandler = (ws: WebSocket) => {
 };
 
 const connectToPeers = (newPeer: string): void => {
-	console.log(newPeer);
 	const ws: WebSocket = new WebSocket(newPeer);
 	ws.on("open", () => {
 		handleConnection(ws);
 	});
 	ws.on("error", () => {
-		console.log("connection failed");
+		console.log(chalk.red("connection failed"));
 	});
 };
 

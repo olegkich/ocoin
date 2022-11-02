@@ -14,8 +14,7 @@ const initHttpServer = (myHttpPort: number) => {
 	});
 	app.post("/mineBlock", (req, res) => {
 		const newBlock: Block = generateNewBlock(req.body.data);
-		console.log("data: ", req.body.data);
-		console.log(`\nBlock: ${JSON.stringify(newBlock)}`);
+
 		res.send(newBlock);
 	});
 	app.get("/peers", (req, res) => {
@@ -26,7 +25,6 @@ const initHttpServer = (myHttpPort: number) => {
 		);
 	});
 	app.post("/addPeer", (req, res) => {
-		console.log(req, "test");
 		connectToPeers(req.body.peer);
 
 		res.send();
@@ -34,7 +32,10 @@ const initHttpServer = (myHttpPort: number) => {
 
 	app.listen(myHttpPort, () => {
 		console.log(
-			chalk.yellow(":::server::: - listening http on port: " + myHttpPort)
+			chalk.blue(
+				":::server::: - listening http on port: " + myHttpPort,
+				"\n"
+			)
 		);
 	});
 };

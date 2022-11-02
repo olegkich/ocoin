@@ -166,6 +166,13 @@ const findBlock = (
 const addBlockToChain = (block: Block): boolean => {
 	if (isBlockValid(block, blockchain[blockchain.length - 1])) {
 		blockchain.push(block);
+		console.log(chalk.green(`>>>Blockchain: Block added:`));
+
+		console.log(
+			chalk.black(
+				`index: ${block.index}\nprevious hash: ${block.previousHash}\nhash: ${block.hash}\ntimestamp: ${block.timestamp}\ndata: ${block.data}\ndifficulty: ${block.difficulty}\nnonce: ${block.nonce}\n`
+			)
+		);
 		return true;
 	}
 	return false;
